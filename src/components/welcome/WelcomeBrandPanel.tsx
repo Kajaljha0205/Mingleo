@@ -1,5 +1,3 @@
-import styles from "./welcome.module.css";
-
 const TRAILS = [
   { delay: "0s", d: "M110,90 C170,110 240,170 292,180" },
   { delay: "-0.4s", d: "M200,350 C230,300 270,240 298,196" },
@@ -41,32 +39,32 @@ const FIGURINES = [
 
 export function WelcomeBrandPanel() {
   return (
-    <section data-testid="brand-panel" className={styles.brandPanel}>
-      <div className={styles.wordmark}>
-        mingleo<span className={styles.wordmarkDot}>.</span>
+    <section data-testid="brand-panel" className="welcome-brand-panel">
+      <div className="welcome-wordmark">
+        mingleo<span className="welcome-wordmark-dot">.</span>
       </div>
 
-      <div className={styles.copy}>
-        <h1 className={styles.headline} aria-label="Real people. Real plans.">
+      <div className="welcome-copy">
+        <h1 className="welcome-headline" aria-label="Real people. Real plans.">
           <span aria-hidden="true">
-            <span className={styles.swapSlot}>
-              <span className={styles.reel}>
-                Reel<span className={styles.cut}>Reel</span>
+            <span className="welcome-swap-slot">
+              <span className="welcome-reel">
+                Reel<span className="welcome-cut">Reel</span>
               </span>
-              <span className={styles.real}>Real</span>
+              <span className="welcome-real">Real</span>
             </span>{" "}
             people.
             <br />
-            <span className={styles.line2}>Real plans.</span>
+            <span className="welcome-line2">Real plans.</span>
           </span>
         </h1>
-        <p className={styles.subline}>
+        <p className="welcome-subline">
           Less scrolling, more strolling. Meet people nearby who&rsquo;re into what you&rsquo;re into.
         </p>
       </div>
 
-      <div className={styles.mapWrap}>
-        <div className={styles.stage}>
+      <div className="welcome-map-wrap">
+        <div className="welcome-stage">
           <svg
             width="560"
             height="440"
@@ -74,7 +72,7 @@ export function WelcomeBrandPanel() {
             fill="none"
             role="img"
             aria-label="Stylised map of Bengaluru with people walking to meet up at Brigade Road, Indiranagar and HSR Layout"
-            className={styles.mapSvg}
+            className="welcome-map-svg"
           >
             {/* faint grid streets */}
             <g stroke="#2F3A42" strokeWidth="1">
@@ -96,7 +94,7 @@ export function WelcomeBrandPanel() {
             {/* walking trails */}
             <g stroke="#7FA8C6" strokeWidth="2" strokeDasharray="3 6" strokeLinecap="round">
               {TRAILS.map((t, i) => (
-                <path key={i} className={styles.trail} style={{ animationDelay: t.delay }} d={t.d} />
+                <path key={i} className="welcome-trail" style={{ animationDelay: t.delay }} d={t.d} />
               ))}
             </g>
             {/* neighbourhood nodes */}
@@ -127,7 +125,7 @@ export function WelcomeBrandPanel() {
             <span
               key={i}
               aria-hidden="true"
-              className={styles.idle}
+              className="welcome-idle"
               style={{ left: `${p.left}px`, top: `${p.top}px`, animationDelay: p.delay }}
             />
           ))}
@@ -137,49 +135,49 @@ export function WelcomeBrandPanel() {
             <span
               key={i}
               aria-hidden="true"
-              className={styles.fig}
+              className="welcome-fig"
               style={{ offsetPath: `path('${f.path}')`, animationDelay: f.delay }}
             >
-              <span className={styles.hd} style={{ background: f.head }} />
-              <span className={styles.bd} style={{ background: f.body }} />
+              <span className="welcome-hd" style={{ background: f.head }} />
+              <span className="welcome-bd" style={{ background: f.body }} />
             </span>
           ))}
 
           {/* Meetup A: Street shopping · Brigade Road */}
-          <div className={styles.anchor} style={{ left: "300px", top: "186px" }} aria-hidden="true">
-            <span className={styles.ripple} style={{ animationDelay: "0s" }} />
-            <div className={styles.pinin} style={{ animationDelay: "0s" }}>
+          <div className="welcome-anchor" style={{ left: "300px", top: "186px" }} aria-hidden="true">
+            <span className="welcome-ripple" style={{ animationDelay: "0s" }} />
+            <div className="welcome-pinin" style={{ animationDelay: "0s" }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#283239" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M5 8h14l-1 12H6z" />
                 <path d="M9 8V6a3 3 0 0 1 6 0v2" />
               </svg>
             </div>
-            <div className={styles.card} style={{ top: "14px", background: "rgba(50,62,70,.92)", animationDelay: "0s" }}>
-              <div className={styles.cardTitle}>Street shopping · Brigade Road</div>
-              <div className={styles.cardMeta}>3 going · Sat 4:00 pm</div>
+            <div className="welcome-card" style={{ top: "14px", background: "rgba(50,62,70,.92)", animationDelay: "0s" }}>
+              <div className="welcome-card-title">Street shopping · Brigade Road</div>
+              <div className="welcome-card-meta">3 going · Sat 4:00 pm</div>
             </div>
           </div>
 
           {/* Meetup B: Cafe hopping · Indiranagar */}
-          <div className={styles.anchor} style={{ left: "430px", top: "160px" }} aria-hidden="true">
-            <span className={styles.ripple} style={{ animationDelay: "-10s" }} />
-            <div className={styles.pinin} style={{ animationDelay: "-10s" }}>
+          <div className="welcome-anchor" style={{ left: "430px", top: "160px" }} aria-hidden="true">
+            <span className="welcome-ripple" style={{ animationDelay: "-10s" }} />
+            <div className="welcome-pinin" style={{ animationDelay: "-10s" }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#283239" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <path d="M4 9h13v5a6 6 0 0 1-6 6h-1a6 6 0 0 1-6-6z" />
                 <path d="M17 11h1.5a2.5 2.5 0 0 1 0 5H17" />
                 <path d="M8 3.5c0 1.2 1.5 1.3 1.5 2.5M12 3.5c0 1.2 1.5 1.3 1.5 2.5" />
               </svg>
             </div>
-            <div className={styles.card} style={{ top: "-66px", background: "rgba(255,255,255,.08)", animationDelay: "-10s" }}>
-              <div className={styles.cardTitle}>Cafe hopping · Indiranagar</div>
-              <div className={styles.cardMeta}>3 going · Sun 11:00 am</div>
+            <div className="welcome-card" style={{ top: "-66px", background: "rgba(255,255,255,.08)", animationDelay: "-10s" }}>
+              <div className="welcome-card-title">Cafe hopping · Indiranagar</div>
+              <div className="welcome-card-meta">3 going · Sun 11:00 am</div>
             </div>
           </div>
 
           {/* Meetup C: Board games · HSR Layout */}
-          <div className={styles.anchor} style={{ left: "420px", top: "360px" }} aria-hidden="true">
-            <span className={styles.ripple} style={{ animationDelay: "-5s" }} />
-            <div className={styles.pinin} style={{ animationDelay: "-5s" }}>
+          <div className="welcome-anchor" style={{ left: "420px", top: "360px" }} aria-hidden="true">
+            <span className="welcome-ripple" style={{ animationDelay: "-5s" }} />
+            <div className="welcome-pinin" style={{ animationDelay: "-5s" }}>
               <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#283239" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="4" y="4" width="16" height="16" rx="3.5" />
                 <circle cx="9" cy="9" r="1" fill="#283239" />
@@ -188,17 +186,17 @@ export function WelcomeBrandPanel() {
                 <circle cx="9" cy="15" r="1" fill="#283239" />
               </svg>
             </div>
-            <div className={styles.card} style={{ top: "-66px", background: "rgba(255,255,255,.08)", animationDelay: "-5s" }}>
-              <div className={styles.cardTitle}>Board games · HSR Layout</div>
-              <div className={styles.cardMeta}>4 going · Fri 8:00 pm</div>
+            <div className="welcome-card" style={{ top: "-66px", background: "rgba(255,255,255,.08)", animationDelay: "-5s" }}>
+              <div className="welcome-card-title">Board games · HSR Layout</div>
+              <div className="welcome-card-meta">4 going · Fri 8:00 pm</div>
             </div>
           </div>
         </div>
       </div>
 
-      <div className={styles.desktopFooter}>
-        <div className={styles.pilotBadge}>
-          <span aria-hidden="true" className={styles.live} />
+      <div className="welcome-desktop-footer">
+        <div className="welcome-pilot-badge">
+          <span aria-hidden="true" className="welcome-live" />
           Piloting in Bengaluru
         </div>
       </div>

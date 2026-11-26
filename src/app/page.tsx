@@ -4,7 +4,6 @@ import { AccountDeletedNotice } from "./AccountDeletedNotice";
 import { Button } from "@/components/ui/Button";
 import { GoogleIcon } from "@/components/ui/GoogleIcon";
 import { WelcomeBrandPanel } from "@/components/welcome/WelcomeBrandPanel";
-import styles from "@/components/welcome/welcome.module.css";
 
 function WelcomeImage() {
   return (
@@ -15,20 +14,20 @@ function WelcomeImage() {
       height={800}
       priority
       unoptimized
-      className={`${styles.welcomeIllustration} h-[260px] w-full rounded-media object-cover`}
+      className="welcome-illustration h-[260px] w-full rounded-media object-cover"
     />
   );
 }
 
 export default function WelcomePage() {
   return (
-    <div className={styles.shell}>
+    <div className="welcome-shell">
       <WelcomeBrandPanel />
 
-      <main className={styles.cardPanel}>
-        <div data-testid="onboarding-card" className={styles.cardBox}>
-          <div className={styles.mobilePilot}>
-            <span aria-hidden="true" className={styles.mobilePilotDot} />
+      <main className="welcome-card-panel">
+        <div data-testid="onboarding-card" className="welcome-card-box">
+          <div className="welcome-mobile-pilot">
+            <span aria-hidden="true" className="welcome-mobile-pilot-dot" />
             Piloting in Bengaluru
           </div>
           <Suspense fallback={null}>
@@ -40,7 +39,7 @@ export default function WelcomePage() {
             <br />
             Do things together.
           </h2>
-          <p className={`${styles.cardSubline} mt-3 text-[16px] leading-6 text-slate`}>
+          <p className="welcome-card-subline mt-3 text-[16px] leading-6 text-slate">
             Meet people nearby who share your interests, and turn plans into real meetups.
           </p>
           <div className="mt-5 md:mt-6">
