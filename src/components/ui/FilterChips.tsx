@@ -1,19 +1,21 @@
 import Link from "next/link";
-import type { ReactNode } from "react";
+import type { MouseEvent, ReactNode } from "react";
 
 export type FilterChipItem = { key: string; label: string; href: string; active: boolean; icon?: ReactNode };
 
-/** Single-select chip links bound to the URL; scroll on mobile, wrap from 768 px. */
+/** Single-select chip links bound to the URL; scroll on mobile, wrap from 768 px. Optional onSelect lets a client page filter instantly. */
 export function FilterChips({
   label,
   items,
   trailing,
   className = "",
+  onSelect,
 }: {
   label: string;
   items: FilterChipItem[];
   trailing?: ReactNode;
   className?: string;
+  onSelect?: (e: MouseEvent<HTMLAnchorElement>, href: string) => void;
 }) {
   return (
     <nav aria-label={label} className={className}>
@@ -24,6 +26,7 @@ export function FilterChips({
               href={o.href}
               scroll={false}
               aria-current={o.active ? "true" : undefined}
+              onClick={onSelect ? (e) => onSelect(e, o.href) : undefined}
               className={`inline-flex min-h-11 items-center gap-2 rounded-full border px-4 text-[15px] font-semibold transition-colors focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600 ${
                 o.active ? "border-blue-600 bg-blue-600 text-white" : "border-border-input bg-white text-charcoal hover:bg-hover"
               }`}
