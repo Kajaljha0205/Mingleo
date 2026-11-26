@@ -242,7 +242,7 @@ export function StepTwo({ catalogue, host }: Props) {
 function AreaPicker({ areaName, onPick, error }: { areaName: string | null; onPick: (slug: string) => void; error?: string | false | null }) {
   const [query, setQuery] = useState<string | null>(null);
   const listId = useId();
-  const results = query === null ? [] : searchAreas(query).slice(0, 8);
+  const results = query === null ? [] : searchAreas(query);
   return (
     <div className="flex flex-col gap-2">
       <label htmlFor="activity-where" className="text-[13px] font-bold">
@@ -268,7 +268,13 @@ function AreaPicker({ areaName, onPick, error }: { areaName: string | null; onPi
         />
       </div>
       {results.length > 0 && (
-        <ul id={listId} role="listbox" aria-label="Areas" className="max-h-64 overflow-y-auto rounded-input border border-border bg-white">
+        <ul
+          id={listId}
+          role="listbox"
+          aria-label="Areas"
+          onMouseDown={(e) => e.preventDefault()}
+          className="max-h-64 overflow-y-auto rounded-input border border-border bg-white"
+        >
           {results.map((a) => (
             <li key={a.slug} role="option" aria-selected={a.name === areaName}>
               <button
