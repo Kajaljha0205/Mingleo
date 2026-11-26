@@ -29,6 +29,7 @@ describe("preparePhotoForUpload", () => {
   });
 
   it("falls back to the original file when already under the Vercel upload limit", async () => {
+    vi.stubGlobal("createImageBitmap", vi.fn(async () => { throw new Error("unsupported"); }));
     const file = new File([new Uint8Array(1024)], "small.png", { type: "image/png" });
     const res = await preparePhotoForUpload(file);
     expect(res.error).toBeUndefined();
