@@ -4,7 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { Check, SlidersHorizontal } from "lucide-react";
 import { Sheet } from "@/components/ui/Sheet";
-import { chipLinkClasses } from "@/components/ui/LocationSelector";
+import { chipLinkBase, chipLinkIdle } from "@/components/ui/LocationSelector";
 
 export type InterestOption = { key: string; label: string; href: string; active: boolean };
 
@@ -20,7 +20,7 @@ export function InterestFilter({ options, title }: { options: InterestOption[]; 
         type="button"
         aria-haspopup="dialog"
         onClick={() => setOpen(true)}
-        className={`${chipLinkClasses} ${selected ? "border-blue-600 bg-blue-600 text-white hover:bg-blue-700" : ""}`}
+        className={`${chipLinkBase} ${selected ? "border-blue-600 bg-blue-600 text-white hover:bg-blue-700" : chipLinkIdle}`}
       >
         <SlidersHorizontal size={18} strokeWidth={1.8} aria-hidden="true" />
         {label}

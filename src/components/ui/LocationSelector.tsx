@@ -1,8 +1,12 @@
 import Link from "next/link";
 import { ChevronDown, MapPin } from "lucide-react";
 
-export const chipLinkClasses =
-  "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border border-border-input bg-white px-4 text-[15px] font-semibold text-charcoal hover:bg-hover focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600";
+export const chipLinkBase =
+  "inline-flex min-h-11 shrink-0 items-center gap-2 rounded-full border px-4 text-[15px] font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-blue-600";
+
+export const chipLinkIdle = "border-border-input bg-white text-charcoal hover:bg-hover";
+
+export const chipLinkClasses = `${chipLinkBase} ${chipLinkIdle}`;
 
 /** "{area}, {city} · {radius} km" chip that opens S06 in edit mode (city / radius optional per screen). */
 export function LocationSelector({
