@@ -39,7 +39,7 @@ test.describe("S16 Activity chat", () => {
     await expect(side).toContainText("Sarjapur Road · 4.1 km");
     await side.getByRole("button", { name: "Withdraw from activity" }).click();
     await expect(page).toHaveURL("/activities/a-hike");
-    await expect(page.getByRole("button", { name: "Request to join", exact: true }).filter({ visible: true })).toBeVisible();
+    await expect(page.getByRole("button", { name: "Count me in", exact: true }).filter({ visible: true })).toBeVisible();
     await page.goto("/activities/a-hike/chat");
     await expect(page.getByRole("heading", { name: "We couldn\u2019t find that" })).toBeVisible();
   });

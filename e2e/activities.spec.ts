@@ -49,7 +49,7 @@ test.describe("S10 Activities home", () => {
     // Full activities have no button.
     await expect(nearby.getByTestId("activity-card").filter({ hasText: "Sunrise trek" }).getByRole("button")).toHaveCount(0);
     const card = nearby.getByTestId("activity-card").filter({ hasText: "Saturday morning doubles" });
-    await card.getByRole("button", { name: "Request to join Saturday morning doubles" }).click();
+    await card.getByRole("button", { name: "Count me in for Saturday morning doubles" }).click();
     await expect(page).toHaveURL("/activities");
     await expect(card.getByText("Requested · waiting for Meera")).toBeVisible();
     await expect(page.getByText("Request sent. Meera will let you know.")).toBeVisible();
@@ -72,10 +72,10 @@ test.describe("S10 Activities home", () => {
   test("card and details stay in sync when requesting / withdrawing on S11", async ({ page }) => {
     await page.goto("/activities");
     const card = page.getByTestId("activity-card").filter({ hasText: "Saturday morning doubles" });
-    await expect(card.getByRole("button", { name: /Request to join/ })).toBeVisible();
+    await expect(card.getByRole("button", { name: /Count me in/ })).toBeVisible();
 
     await card.getByRole("link").click();
-    const s11Request = page.getByRole("button", { name: "Request to join", exact: true }).filter({ visible: true });
+    const s11Request = page.getByRole("button", { name: "Count me in", exact: true }).filter({ visible: true });
     await s11Request.click();
     await expect(page.getByText("Requested · waiting for Meera")).toBeVisible();
     await page.getByRole("link", { name: "Back to Activities" }).click();
@@ -85,16 +85,16 @@ test.describe("S10 Activities home", () => {
     await page.getByRole("button", { name: "Withdraw request" }).click();
     await expect(s11Request).toBeVisible();
     await page.getByRole("link", { name: "Back to Activities" }).click();
-    await expect(card.getByRole("button", { name: /Request to join/ })).toBeVisible();
+    await expect(card.getByRole("button", { name: /Count me in/ })).toBeVisible();
 
     // Request from the card, withdraw inside, back again.
-    await card.getByRole("button", { name: /Request to join/ }).click();
+    await card.getByRole("button", { name: /Count me in/ }).click();
     await expect(card.getByText("Requested · waiting for Meera")).toBeVisible();
     await card.getByRole("link").click();
     await page.getByRole("button", { name: "Withdraw request" }).click();
     await expect(s11Request).toBeVisible();
     await page.goBack();
-    await expect(card.getByRole("button", { name: /Request to join/ })).toBeVisible();
+    await expect(card.getByRole("button", { name: /Count me in/ })).toBeVisible();
   });
 
   test("location chip opens S06 edit mode and Save returns to Activities", async ({ page }) => {
@@ -124,13 +124,13 @@ test.describe("S11 Activity details", () => {
     const going = page.getByRole("list", { name: "Who's going" });
     await expect(going.getByRole("listitem")).toHaveText([/Meera.*Host/, /Rohan/, /Sneha/, /1 spot open/]);
 
-    await page.getByRole("button", { name: "Request to join" }).first().click();
+    await page.getByRole("button", { name: "Count me in" }).first().click();
     await expect(page.getByText("Requested · waiting for Meera")).toBeVisible();
     await expect
       .poll(async () => (await getState()).activities.parts)
       .toContainEqual(expect.objectContaining({ activityId: "a-doubles", userId: "u1", status: "requested" }));
     await page.getByRole("button", { name: "Withdraw request" }).click();
-    await expect(page.getByRole("button", { name: "Request to join" }).first()).toBeVisible();
+    await expect(page.getByRole("button", { name: "Count me in" }).first()).toBeVisible();
   });
 
   test("full activity can't be requested; unknown ids 404; host sees Manage activity", async ({ page }) => {

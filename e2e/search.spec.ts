@@ -207,7 +207,7 @@ test.describe("S19 Search activities", () => {
   test("Request to join straight from a card (Q-54)", async ({ page }) => {
     await page.goto("/search/activities");
     const card = cards(page).filter({ hasText: "Coffee exploration" });
-    await card.getByRole("button", { name: "Request to join Coffee exploration" }).click();
+    await card.getByRole("button", { name: "Count me in for Coffee exploration" }).click();
     await expect(card.getByText("Requested · waiting for Ananya")).toBeVisible();
     await expect
       .poll(async () => (await getState()).activities.parts)

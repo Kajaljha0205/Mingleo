@@ -27,25 +27,25 @@ function renderControl(initial: ViewerState, opts: { full?: boolean; phase?: Pha
 const NOTE = "Tanvi approves every request. Joining doesn't make you connections.";
 
 describe("S11 join control (ST-103, all viewer states)", () => {
-  it("not requested + spots → Request to join → Requested · waiting for host + Withdraw request", async () => {
+  it("not requested + spots → Count me in → Requested · waiting for host + Withdraw request", async () => {
     const user = userEvent.setup();
     renderControl("none");
     expect(screen.getByText(NOTE)).toBeInTheDocument();
-    await user.click(screen.getByRole("button", { name: "Request to join" }));
+    await user.click(screen.getByRole("button", { name: "Count me in" }));
     expect(actions.requestToJoin).toHaveBeenCalledWith("a1");
     expect(await screen.findByText("Requested · waiting for Tanvi")).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Withdraw request" }));
     expect(actions.withdrawJoinRequest).toHaveBeenCalledWith("a1");
-    expect(await screen.findByRole("button", { name: "Request to join" })).toBeEnabled();
+    expect(await screen.findByRole("button", { name: "Count me in" })).toBeEnabled();
   });
 
   it("rolls back with an error toast when the server refuses", async () => {
     actions.requestToJoin.mockResolvedValueOnce({ error: "This activity is full." });
     const user = userEvent.setup();
     renderControl("none");
-    await user.click(screen.getByRole("button", { name: "Request to join" }));
+    await user.click(screen.getByRole("button", { name: "Count me in" }));
     expect(await screen.findByText("This activity is full.")).toBeInTheDocument();
-    expect(screen.getByRole("button", { name: "Request to join" })).toBeInTheDocument();
+    expect(screen.getByRole("button", { name: "Count me in" })).toBeInTheDocument();
   });
 
   it("accepted → You're in, Open chat → S16, Withdraw from activity", async () => {

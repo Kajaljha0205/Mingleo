@@ -125,7 +125,7 @@ export function JoinControl({ activityId, hostName, initial, full, phase }: Prop
   } else {
     control = primary = (
       <Button disabled={pending} onClick={request}>
-        Request to join
+        Count me in
       </Button>
     );
   }

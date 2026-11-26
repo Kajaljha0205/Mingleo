@@ -43,7 +43,7 @@ export function CardJoinButton({
   return (
     <Button
       size="small"
-      aria-label={`Request to join ${title}`}
+      aria-label={`Count me in for ${title}`}
       disabled={pending}
       onClick={() => {
         startTransition(async () => {
@@ -54,7 +54,7 @@ export function CardJoinButton({
         });
       }}
     >
-      Request to join
+      Count me in
     </Button>
   );
 }
