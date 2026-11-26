@@ -9,6 +9,7 @@ import { Grid3 } from "@/components/ui/Grid";
 import { InterestFilter } from "@/components/ui/InterestFilter";
 import { LocationSelector } from "@/components/ui/LocationSelector";
 import { cleanQuery, mutualLabel, peopleCountLine, pickInterest, searchHref } from "@/lib/search";
+import { searchBackQuery } from "@/lib/origins";
 import { loadInterests, requireOnboarded } from "@/server/profile";
 import { searchPeople } from "@/server/search";
 import { SearchBar } from "../SearchBar";
@@ -32,6 +33,11 @@ export default function SearchPeoplePage({ searchParams }: PageProps<"/search/pe
   );
 }
 
+function locationHref(params: Record<string, string | string[] | undefined>) {
+  const back = searchBackQuery(params);
+  return back ? `/location?from=search&back=${encodeURIComponent(back)}` : "/location?from=search";
+}
+
 async function People({ searchParams }: Pick<PageProps<"/search/people">, "searchParams">) {
   const params = await searchParams;
   const { supabase, profile } = await requireOnboarded();
@@ -52,7 +58,7 @@ async function People({ searchParams }: Pick<PageProps<"/search/people">, "searc
           areaName={profile.areaName ?? ""}
           city={profile.city}
           radiusKm={profile.radiusKm}
-          href="/location?from=search"
+          href={locationHref(params)}
         />
         <InterestFilter
           title="Show people who like"

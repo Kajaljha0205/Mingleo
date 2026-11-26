@@ -12,6 +12,7 @@ import { LocationSelector } from "@/components/ui/LocationSelector";
 import { activityHref, showsJoinAction } from "@/lib/activity";
 import { activitiesCountLine, cleanQuery, dayChips, dayLabel, pickDate, pickInterest, searchHref } from "@/lib/search";
 import { dateKey, dayChip } from "@/lib/time";
+import { searchBackQuery } from "@/lib/origins";
 import { loadInterests, requireOnboarded } from "@/server/profile";
 import { searchActivities } from "@/server/search";
 import { CardJoinButton } from "../../activities/CardJoinButton";
@@ -34,6 +35,11 @@ export default function SearchActivitiesPage({ searchParams }: PageProps<"/searc
       </PageContainer>
     </>
   );
+}
+
+function locationHref(params: Record<string, string | string[] | undefined>) {
+  const back = searchBackQuery(params);
+  return back ? `/location?from=search-activities&back=${encodeURIComponent(back)}` : "/location?from=search-activities";
 }
 
 async function Activities({ searchParams }: Pick<PageProps<"/search/activities">, "searchParams">) {
@@ -60,7 +66,7 @@ async function Activities({ searchParams }: Pick<PageProps<"/search/activities">
 
       {/* Q-07: one filter row — location/distance + interest filter; dates below. */}
       <div className="-mx-4 mt-5 flex gap-2.5 overflow-x-auto px-4 [scrollbar-width:none] md:mx-0 md:flex-wrap md:overflow-visible md:px-0">
-        <LocationSelector areaName={profile.areaName ?? ""} radiusKm={profile.radiusKm} href="/location?from=search-activities" />
+        <LocationSelector areaName={profile.areaName ?? ""} radiusKm={profile.radiusKm} href={locationHref(params)} />
         <InterestFilter
           title="Show activities for"
           options={[{ slug: null, name: "All my interests" }, ...mine].map((i) => ({

@@ -6,6 +6,7 @@ import { redirect } from "next/navigation";
 import sharp from "sharp";
 import { findArea, isRadius, CITY } from "@/lib/locations/bengaluru";
 import { AFTER_ONBOARDING_PATH, MIN_INTERESTS, nextPath } from "@/lib/onboarding";
+import { withBackQuery } from "@/lib/origins";
 import {
   parseBirthday,
   underageBirthDate,
@@ -152,6 +153,7 @@ export async function saveLocation(
   areaSlug: string,
   radiusKm: number,
   from?: string,
+  back?: string,
 ): Promise<{ error: string }> {
   const area = findArea(areaSlug);
   if (!area) return { error: "Choose an area." };
@@ -170,7 +172,7 @@ export async function saveLocation(
   revalidatePath("/activities");
   revalidatePath("/search", "layout");
   revalidatePath("/profile", "layout");
-  redirect(nextPath("location", from));
+  redirect(withBackQuery(nextPath("location", from), from, back));
 }
 
 export async function completeOnboarding(): Promise<{ error: string }> {

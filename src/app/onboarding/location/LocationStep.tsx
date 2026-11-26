@@ -19,9 +19,9 @@ import { saveLocation } from "../actions";
 
 type Mode = "idle" | "explain" | "locating" | "choose";
 
-type Props = { initialAreaSlug: string | null; initialRadius: RadiusKm; from?: string; saveLabel?: string };
+type Props = { initialAreaSlug: string | null; initialRadius: RadiusKm; from?: string; back?: string; saveLabel?: string };
 
-export function LocationStep({ initialAreaSlug, initialRadius, from, saveLabel = "Continue" }: Props) {
+export function LocationStep({ initialAreaSlug, initialRadius, from, back, saveLabel = "Continue" }: Props) {
   const [area, setArea] = useState<Area | null>(
     initialAreaSlug ? (findArea(initialAreaSlug) ?? null) : null,
   );
@@ -67,7 +67,9 @@ export function LocationStep({ initialAreaSlug, initialRadius, from, saveLabel =
   function save() {
     if (!area) return;
     startTransition(async () => {
-      const result = await saveLocation(area.slug, radius, from);
+      const result = back
+        ? await saveLocation(area.slug, radius, from, back)
+        : await saveLocation(area.slug, radius, from);
       if (result?.error) setError(result.error);
     });
   }
