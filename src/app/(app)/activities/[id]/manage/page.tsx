@@ -1,18 +1,17 @@
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Suspense } from "react";
 import { CalendarDays, MapPin } from "lucide-react";
 import { MobileHeader, PageContainer } from "@/components/app/AppShell";
 import { ActivityCover } from "@/components/cards/ActivityCard";
 import { Avatar } from "@/components/ui/Avatar";
 import { BackLink } from "@/components/ui/BackLink";
-import { buttonClasses } from "@/components/ui/Button";
 import { CapacityBar } from "@/components/ui/CapacityBar";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { spotsLeftLabel, visibilityPill } from "@/lib/activity";
 import { dateTimeRange } from "@/lib/time";
 import { loadManage } from "@/server/activities";
 import { loadInterests, requireOnboarded } from "@/server/profile";
+import { AutoRedirectWhenEnded } from "../AutoRedirectWhenEnded";
 import { HostActions, RequestsPanel } from "./ManagePanel";
 
 /** S14 Host: manage activity (host only — everyone else gets the same 404). */
@@ -30,6 +29,7 @@ async function Manage({ params }: Pick<PageProps<"/activities/[id]/manage">, "pa
   const catalogue = await loadInterests(supabase);
   const a = await loadManage(supabase, id, catalogue);
   if (!a) notFound();
+  if (a.phase === "completed") redirect(`/activities/${a.id}/after`);
 
   const left = Math.max(0, a.limit - a.going);
   const cancelled = a.phase === "cancelled";
@@ -38,6 +38,7 @@ async function Manage({ params }: Pick<PageProps<"/activities/[id]/manage">, "pa
 
   return (
     <>
+      {editable && <AutoRedirectWhenEnded startsAt={a.startsAt} endsAt={a.endsAt} to={`/activities/${a.id}/after`} />}
       <MobileHeader title={a.title} back={{ href: "/activities", label: "Back to Activities" }} />
       <PageContainer>
         <BackLink href="/activities" label="Back to Activities" />
@@ -86,11 +87,6 @@ async function Manage({ params }: Pick<PageProps<"/activities/[id]/manage">, "pa
                 </div>
                 <CapacityBar going={a.going} limit={a.limit} />
               </div>
-              {a.phase === "completed" && (
-                <Link href={`/activities/${a.id}/after`} className={`${buttonClasses("primary")} mt-6`}>
-                  After the activity
-                </Link>
-              )}
               {cancelled ? (
                 <div role="status" className="mt-6 rounded-input bg-danger-tint px-4 py-3 text-danger-tint-text">
                   <p className="text-[15px] font-bold">You cancelled this activity. Everyone involved was told.</p>

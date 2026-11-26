@@ -55,19 +55,7 @@ export function JoinControl({ activityId, hostName, initial, full, phase }: Prop
 
   let control: ReactNode;
   let primary: ReactNode = null;
-  if (phase === "completed" && (state === "host" || state === "accepted")) {
-    control = (
-      <div className="flex flex-col gap-2.5">
-        <Link href={`/activities/${activityId}/after`} className={buttonClasses("primary")}>
-          After the activity
-        </Link>
-        <Link href={`/activities/${activityId}/chat`} className={buttonClasses("light")}>
-          <MessageSquare size={18} strokeWidth={1.8} aria-hidden="true" />
-          Group chat
-        </Link>
-      </div>
-    );
-  } else if (state === "host") {
+  if (state === "host") {
     control = primary = (
       <Link href={`/activities/${activityId}/manage`} className={buttonClasses("primary")}>
         <Settings2 size={18} strokeWidth={1.8} aria-hidden="true" />

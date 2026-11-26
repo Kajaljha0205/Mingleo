@@ -80,9 +80,9 @@ describe("S11 join control (ST-103, all viewer states)", () => {
     expect(screen.queryByText(NOTE)).toBeNull();
   });
 
-  it("completed → people who took part get S17 and the group chat", () => {
-    renderControl("accepted", { phase: "completed" });
-    expect(screen.getByRole("link", { name: "After the activity" })).toHaveAttribute("href", "/activities/a1/after");
-    expect(screen.getByRole("link", { name: "Group chat" })).toHaveAttribute("href", "/activities/a1/chat");
+  it("completed → non-participants see Requests closed (participants redirect to S17)", () => {
+    renderControl("none", { phase: "completed" });
+    expect(screen.getByRole("button", { name: "Requests closed" })).toBeDisabled();
+    expect(screen.queryByRole("link", { name: "After the activity" })).toBeNull();
   });
 });

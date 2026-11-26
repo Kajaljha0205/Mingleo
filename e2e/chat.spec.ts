@@ -89,7 +89,6 @@ test.describe("S16-D Direct chat", () => {
 test.describe("S17 After the activity", () => {
   test("heading, people with Connect / Pending (tap to withdraw) / Connected, report, re-host prefill", async ({ page }) => {
     await page.goto("/activities/a-past");
-    await page.getByRole("link", { name: "After the activity" }).click();
     await expect(page).toHaveURL("/activities/a-past/after");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText("Hope you enjoyed Friday board games, Aarav!");
     await expect(page.getByText(/^Completed · /)).toBeVisible();

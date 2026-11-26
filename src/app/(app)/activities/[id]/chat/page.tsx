@@ -1,5 +1,4 @@
 import Image from "next/image";
-import Link from "next/link";
 import { notFound } from "next/navigation";
 import { Suspense } from "react";
 import { CalendarDays, Check, MapPin, Users } from "lucide-react";
@@ -9,7 +8,6 @@ import { ChatRoom } from "@/components/chat/ChatRoom";
 import { WithdrawFromActivity } from "@/components/chat/WithdrawFromActivity";
 import { AvatarStack } from "@/components/ui/Avatar";
 import { BackLink } from "@/components/ui/BackLink";
-import { buttonClasses } from "@/components/ui/Button";
 import { StatusPill } from "@/components/ui/StatusPill";
 import { readOnlyCopy } from "@/lib/chat";
 import { distanceLabel } from "@/lib/format";
@@ -35,7 +33,12 @@ async function ActivityChat({ params }: Pick<PageProps<"/activities/[id]/chat">,
   const thread = cid ? await loadThread(supabase, cid, catalogue) : null;
   if (!thread?.activity) notFound();
   const a = thread.activity;
-  const backHref = a.viewerRole === "host" ? `/activities/${a.id}/manage` : `/activities/${a.id}`;
+  const backHref =
+    a.phase === "completed"
+      ? `/activities/${a.id}/after`
+      : a.viewerRole === "host"
+        ? `/activities/${a.id}/manage`
+        : `/activities/${a.id}`;
   const others = thread.members.filter((m) => m.id !== userId);
 
   return (
@@ -125,11 +128,6 @@ function SideCard({ thread }: { thread: ChatThread }) {
           </span>
           {full && <StatusPill variant="full">Full</StatusPill>}
         </p>
-        {a.phase === "completed" && (
-          <Link href={`/activities/${a.id}/after`} className={buttonClasses("secondary")}>
-            After the activity
-          </Link>
-        )}
         {a.viewerRole === "participant" && (a.phase === "open" || a.phase === "started") && !thread.readOnly && (
           <WithdrawFromActivity activityId={a.id} hostName={a.hostFirstName} />
         )}

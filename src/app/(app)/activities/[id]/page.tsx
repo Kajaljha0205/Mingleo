@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import { Suspense, type ReactNode } from "react";
 import { CalendarDays, MapPin, Plus } from "lucide-react";
 import { MobileHeader, PageContainer } from "@/components/app/AppShell";
@@ -14,6 +14,7 @@ import { originFrom } from "@/lib/origins";
 import { dateTimeRange, startsIn } from "@/lib/time";
 import { loadActivity, type ActivityDetails } from "@/server/activities";
 import { loadInterests, requireOnboarded } from "@/server/profile";
+import { AutoRedirectWhenEnded } from "./AutoRedirectWhenEnded";
 import { JoinControl } from "./JoinControl";
 
 export default function ActivityPage({ params, searchParams }: PageProps<"/activities/[id]">) {
@@ -35,9 +36,13 @@ async function Activity({ params, searchParams }: PageProps<"/activities/[id]">)
 
   const left = Math.max(0, a.limit - a.going);
   const insider = a.viewerState === "host" || a.viewerState === "accepted";
+  if (a.phase === "completed" && insider) redirect(`/activities/${a.id}/after`);
 
   return (
     <>
+      {insider && (a.phase === "open" || a.phase === "started") && (
+        <AutoRedirectWhenEnded startsAt={a.startsAt} endsAt={a.endsAt} to={`/activities/${a.id}/after`} />
+      )}
       <MobileHeader title={a.title} back={{ href: origin.href, label: `Back to ${origin.label}` }} />
       <PageContainer>
         <BackLink href={origin.href} label={`Back to ${origin.label}`} />
