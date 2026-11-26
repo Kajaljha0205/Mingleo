@@ -55,7 +55,7 @@ async function Manage({ params }: Pick<PageProps<"/activities/[id]/manage">, "pa
                   {cancelled ? (
                     <StatusPill variant="cancelled">Cancelled</StatusPill>
                   ) : (
-                    <StatusPill variant="positive">{a.phase === "open" ? "Open" : a.phase === "started" ? "Happening now" : "Completed"}</StatusPill>
+                    <StatusPill variant="positive">{a.phase === "open" ? "Open" : "Happening now"}</StatusPill>
                   )}
                   <StatusPill variant="host">{visibilityPill(a.visibility)}</StatusPill>
                 </>
@@ -110,7 +110,7 @@ async function Manage({ params }: Pick<PageProps<"/activities/[id]/manage">, "pa
               key={a.requests.map((r) => r.participationId).join() + a.going}
               requests={a.requests}
               full={left === 0}
-              open={!cancelled && a.phase !== "completed"}
+              open={!cancelled}
             />
 
             <h2 className="mt-8 font-display text-[22px] leading-7 font-bold">
