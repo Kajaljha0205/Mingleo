@@ -83,7 +83,7 @@ async function profile(id: string) {
 beforeAll(async () => {
   db = new PGlite();
   await db.exec(STUBS);
-  for (const f of ["0001_onboarding.sql", "0002_grants.sql", "0003_delete_underage.sql", "0004_discover.sql", "0005_activities.sql", "0006_feed_viewer_state.sql", "0007_feed_people_radius.sql", "0008_chat.sql", "0009_seen_live.sql", "0010_search.sql", "0011_inbox_profile.sql", "0012_settings.sql"]) {
+  for (const f of ["0001_onboarding.sql", "0002_grants.sql", "0003_delete_underage.sql", "0004_discover.sql", "0005_activities.sql", "0006_feed_viewer_state.sql", "0007_feed_people_radius.sql", "0008_chat.sql", "0009_seen_live.sql", "0010_search.sql", "0011_inbox_profile.sql", "0012_settings.sql", "0013_feed_my_interests.sql"]) {
     await db.exec(sql(`migrations/${f}`));
   }
 }, 60_000);
@@ -374,14 +374,15 @@ async function notificationTypes(userId: string) {
 }
 
 describe("activities feed (ST-090, §10 rules 5 & 7)", () => {
-  it("From your people: any connection's open activity within my radius; Nearby: matching interest, within radius, not connections-only", async () => {
+  it("From your people & Nearby: only activities matching my interests within my radius; Nearby excludes connections-only", async () => {
     const me = await addUser("Me", HSR, [1, 2]);
-    const friend = await addUser("Friend", KORAMANGALA, [9]);
+    const friend = await addUser("Friend", KORAMANGALA, [2, 9]);
     const stranger = await addUser("Stranger", KORAMANGALA, [1]);
     await connectUsers(me, friend);
 
-    await createActivity(friend, { title: "Friend shopping", interest: 9, where: KORAMANGALA, visibility: "connections" });
-    await createActivity(friend, { title: "Friend too far", interest: 9, where: INDIRANAGAR });
+    await createActivity(friend, { title: "Friend swim", interest: 2, where: KORAMANGALA, visibility: "connections" });
+    await createActivity(friend, { title: "Friend other interest", interest: 9, where: KORAMANGALA, visibility: "connections" });
+    await createActivity(friend, { title: "Friend too far", interest: 2, where: INDIRANAGAR });
     await createActivity(stranger, { title: "Nearby doubles", interest: 1, where: KORAMANGALA, startsIn: "1 day" });
     await createActivity(stranger, { title: "Not my interest", interest: 3, where: KORAMANGALA });
     await createActivity(stranger, { title: "Connections only", interest: 1, visibility: "connections" });
@@ -392,7 +393,7 @@ describe("activities feed (ST-090, §10 rules 5 & 7)", () => {
     const rows = await feed();
     expect(rows.map((r) => [r.section, r.title])).toEqual([
       ["nearby", "Nearby doubles"],
-      ["people", "Friend shopping"],
+      ["people", "Friend swim"],
     ]);
     expect(Object.keys(rows[0])).not.toEqual(expect.arrayContaining(["lat"]));
     expect(Object.keys(rows[0])).not.toContain("address");

@@ -15,7 +15,7 @@ test.describe("S10 Activities home", () => {
   test("header, sections and interest filter", async ({ page }) => {
     await page.goto("/activities");
     await expect(page.getByRole("heading", { level: 1 })).toHaveText(/^Good (morning|afternoon|evening), Aarav$/);
-    await expect(page.getByTestId("count-line")).toHaveText("5 activities near you this week");
+    await expect(page.getByTestId("count-line")).toHaveText("4 activities near you this week");
     await expect(page.getByRole("link", { name: "Location: HSR Layout, Bengaluru, 5 km. Change" })).toHaveAttribute(
       "href",
       "/location?from=activities",
@@ -23,7 +23,7 @@ test.describe("S10 Activities home", () => {
     await expect(page.getByRole("link", { name: "Create activity" })).toHaveAttribute("href", "/activities/new");
 
     const people = page.getByRole("list", { name: "From your people" });
-    await expect(people.getByTestId("activity-card")).toHaveText([/Early swim at the club/, /Nandi Hills sunrise hike/]);
+    await expect(people.getByTestId("activity-card")).toHaveText([/Nandi Hills sunrise hike/]);
     const nearby = page.getByRole("list", { name: "Nearby activities" });
     // Soonest first; Full still shows; other interests and my own activity don't.
     await expect(nearby.getByTestId("activity-card")).toHaveText([/Sunrise trek.*Full/, /Saturday morning doubles/, /Coffee exploration/]);
@@ -31,7 +31,7 @@ test.describe("S10 Activities home", () => {
     await expect(page.getByRole("link", { name: "See all" })).toHaveAttribute("href", "/search/activities?from=people");
 
     const filters = page.getByRole("navigation", { name: "Filter by interest" });
-    await expect(filters.getByRole("link")).toHaveText(["All", "Badminton", "Swimming", "Hiking", "Cafe exploration"]);
+    await expect(filters.getByRole("link")).toHaveText(["All", "Badminton", "Hiking", "Cafe exploration"]);
     await filters.getByRole("link", { name: "Badminton" }).click();
     await expect(page).toHaveURL("/activities?interest=badminton");
     await expect(filters.getByRole("link", { name: "Badminton" })).toHaveAttribute("aria-current", "true");

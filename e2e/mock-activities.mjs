@@ -129,7 +129,8 @@ export function handleActivityRpc(fn, args, s, people, viewerRow, viewerInterest
       const rows = s.list
         .filter((a) => a.host !== "u1" && a.status === "open" && phase(a) === "open" && !people.blocked.has(a.host))
         .filter((a) => a.distance_km <= radius)
-        .filter((a) => people.connected.has(a.host) || (a.visibility === "connections_and_nearby" && viewerInterestIds.includes(a.interest_id)))
+        .filter((a) => viewerInterestIds.includes(a.interest_id))
+        .filter((a) => people.connected.has(a.host) || a.visibility === "connections_and_nearby")
         .sort((x, y) => Date.parse(x.starts_at) - Date.parse(y.starts_at))
         .map((a) => {
           const h = who(a.host, viewerRow);

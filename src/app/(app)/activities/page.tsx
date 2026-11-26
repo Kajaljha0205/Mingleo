@@ -32,7 +32,7 @@ async function Activities({ searchParams }: Pick<PageProps<"/activities">, "sear
   const { interest } = await searchParams;
   const { supabase, userId, profile } = await requireOnboarded();
   const catalogue = await loadInterests(supabase);
-  const feed = await loadFeed(supabase, catalogue);
+  const feed = (await loadFeed(supabase, catalogue)).filter((a) => profile.interestIds.includes(a.interest.id));
   const now = new Date();
 
   // Chips: All + each interest present in the current results (catalogue order).
