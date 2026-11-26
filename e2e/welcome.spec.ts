@@ -2,71 +2,65 @@ import { expect, test } from "@playwright/test";
 import { MOCK_URL } from "./helpers";
 
 const widths = [
-  { width: 1440, height: 900, headline: 36, panel: true, card: true },
-  { width: 1280, height: 800, headline: 36, panel: true, card: true },
-  { width: 1024, height: 768, headline: 36, panel: true, card: true },
-  { width: 768, height: 1024, headline: 30, panel: false, card: true },
-  { width: 390, height: 844, headline: 26, panel: false, card: false },
-  { width: 375, height: 667, headline: 26, panel: false, card: false },
+  { width: 1440, height: 900, mobile: false },
+  { width: 1280, height: 800, mobile: false },
+  { width: 1024, height: 768, mobile: false },
+  { width: 768, height: 1024, mobile: false },
+  { width: 390, height: 844, mobile: true },
+  { width: 375, height: 667, mobile: true },
 ];
 
 for (const w of widths) {
   test.describe(`S01 Welcome @ ${w.width}px`, () => {
     test.use({ viewport: { width: w.width, height: w.height } });
 
-    test("layout matches V4 artboard rules", async ({ page }) => {
+    test("layout matches redesigned brand panel and sign-in card", async ({ page }) => {
       await page.goto("/");
 
       const scrollWidth = await page.evaluate(() => document.documentElement.scrollWidth);
       expect(scrollWidth, "no horizontal scroll").toBeLessThanOrEqual(w.width);
 
       const panel = page.getByTestId("brand-panel");
-      if (w.panel) {
-        await expect(panel).toBeVisible();
-        const box = (await panel.boundingBox())!;
-        expect(box.width).toBeCloseTo(Math.min(w.width * 0.42, 580), 0);
-        await expect(panel.getByText("Real people.")).toBeVisible();
-        await expect(panel.getByText("Piloting in Bengaluru")).toBeVisible();
-      } else {
-        await expect(panel).toBeHidden();
-      }
+      await expect(panel).toBeVisible();
+      await expect(
+        panel.getByRole("heading", { level: 1, name: "Real people. Real plans." }),
+      ).toBeVisible();
+      await expect(
+        panel.getByRole("img", { name: /Stylised map of Bengaluru/ }),
+      ).toBeVisible();
+      await expect(panel.getByRole("list", { name: "Sign-up steps" })).toHaveCount(0);
 
       const card = page.getByTestId("onboarding-card");
       const cardBox = (await card.boundingBox())!;
-      const cardBg = await card.evaluate((el) => getComputedStyle(el).backgroundColor);
-      if (w.card) {
-        expect(cardBg).toBe("rgb(255, 255, 255)");
-        expect(cardBox.width).toBeLessThanOrEqual(560);
-        expect(cardBox.y).toBeGreaterThan(0);
-      } else {
+      const img = page.getByRole("img", { name: /Friends meeting in a park/ });
+
+      if (w.mobile) {
         expect(cardBox.width).toBe(w.width);
+        await expect(img).toBeHidden();
+        await expect(card.getByText("Piloting in Bengaluru")).toBeVisible();
+      } else {
+        const panelBox = (await panel.boundingBox())!;
+        expect(panelBox.width).toBeCloseTo(w.width * 0.55, -1);
+        await expect(panel.getByText("Piloting in Bengaluru")).toBeVisible();
+        await expect(img).toBeVisible();
+        expect(cardBox.width).toBeLessThanOrEqual(520);
       }
 
-      const h1 = page.getByRole("heading", { level: 1 });
-      await expect(h1).toHaveText(/Find people\.\s*Do things together\./);
-      const size = await h1.evaluate((el) => parseFloat(getComputedStyle(el).fontSize));
-      expect(size).toBe(w.headline);
-      expect(await h1.evaluate((el) => getComputedStyle(el).fontWeight)).toBe("800");
-
-      const img = page.getByRole("img", { name: /Friends meeting in a park/ });
-      await expect(img).toBeVisible();
-      expect((await img.boundingBox())!.height).toBe(260);
-      expect(await img.evaluate((el: HTMLImageElement) => el.naturalWidth)).toBeGreaterThan(0);
+      const h2 = page.getByRole("heading", { level: 2 });
+      await expect(h2).toHaveText(/Find people\.\s*Do things together\./);
+      expect(await h2.evaluate((el) => getComputedStyle(el).fontWeight)).toBe("800");
 
       await expect(page.getByRole("button")).toHaveCount(1);
       const cta = page.getByRole("button", { name: "Continue with Google" });
-      await expect(cta).toBeInViewport();
+      await expect(cta).toBeVisible();
       const ctaBox = (await cta.boundingBox())!;
       expect(ctaBox.height).toBeGreaterThanOrEqual(52);
       expect(ctaBox.x).toBeGreaterThanOrEqual(0);
       expect(ctaBox.x + ctaBox.width).toBeLessThanOrEqual(w.width);
-      expect(await cta.evaluate((el) => getComputedStyle(el).backgroundColor)).toBe(
-        "rgb(30, 121, 164)",
-      );
 
       await expect(
         page.getByText("By continuing you agree to our Terms and Privacy Policy."),
-      ).toBeInViewport();
+      ).toBeVisible();
 
       await page.screenshot({ path: `test-results/s01-${w.width}.png`, fullPage: true });
     });

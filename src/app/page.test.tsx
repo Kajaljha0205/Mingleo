@@ -1,4 +1,4 @@
-import { render, screen, within } from "@testing-library/react";
+import { render, screen } from "@testing-library/react";
 import { describe, expect, it, vi } from "vitest";
 
 let query = "";
@@ -6,10 +6,19 @@ vi.mock("next/navigation", () => ({ useSearchParams: () => new URLSearchParams(q
 const { default: WelcomePage } = await import("./page");
 
 describe("S01 Welcome", () => {
-  it("shows the headline, supporting line and lifestyle image", () => {
+  it("shows the animated brand headline, subline, Bengaluru map and sign-in card", () => {
     render(<WelcomePage />);
     expect(
-      screen.getByRole("heading", { level: 1, name: /Find people\.\s*Do things together\./ }),
+      screen.getByRole("heading", { level: 1, name: "Real people. Real plans." }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(/Less scrolling, more strolling\. Meet people nearby/),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("img", { name: /Stylised map of Bengaluru/ }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { level: 2, name: /Find people\.\s*Do things together\./ }),
     ).toBeInTheDocument();
     expect(
       screen.getByText(
@@ -19,10 +28,12 @@ describe("S01 Welcome", () => {
     expect(screen.getByRole("img", { name: /Friends meeting in a park/ })).toHaveAttribute("src");
   });
 
-  it("shows the wordmark on mobile/tablet and in the desktop brand panel", () => {
+  it("shows the wordmark, Piloting in Bengaluru, and removes the old 1–5 steps list", () => {
     render(<WelcomePage />);
-    expect(screen.getAllByText("mingleo")).toHaveLength(2);
-    expect(screen.getByTestId("brand-panel")).toHaveClass("hidden", "lg:flex");
+    expect(screen.getByText("mingleo")).toBeInTheDocument();
+    expect(screen.getByTestId("brand-panel")).toBeInTheDocument();
+    expect(screen.getAllByText("Piloting in Bengaluru").length).toBeGreaterThanOrEqual(1);
+    expect(screen.queryByRole("list", { name: "Sign-up steps" })).not.toBeInTheDocument();
   });
 
   it("has a single Continue with Google action that posts to /auth/google", () => {
@@ -44,8 +55,6 @@ describe("S01 Welcome", () => {
     ).toBeInTheDocument();
     expect(screen.queryByRole("progressbar")).not.toBeInTheDocument();
     expect(screen.queryByRole("link", { name: "Back" })).not.toBeInTheDocument();
-    const steps = screen.getByRole("list", { name: "Sign-up steps" });
-    expect(within(steps).queryByLabelText("Completed")).not.toBeInTheDocument();
     expect(screen.queryByRole("status")).toBeNull();
   });
 
